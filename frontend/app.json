@@ -9,7 +9,7 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "package": "com.yourcompany.socialapp"
+      "package": "com.shajibhasan.socialapp"
     },
     "ios": {
       "supportsTablet": true,
