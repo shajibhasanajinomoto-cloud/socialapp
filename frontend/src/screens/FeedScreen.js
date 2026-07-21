@@ -8,15 +8,18 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import api from "../api/api";
 import PostCard from "../components/PostCard";
+import StoryBar from "../components/StoryBar";
 import { useAuth } from "../context/AuthContext";
 
 export default function FeedScreen({ navigation }) {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [storyGroups, setStoryGroups] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -32,9 +35,14 @@ export default function FeedScreen({ navigation }) {
     setPage(pageNum);
   };
 
+  const fetchStories = async () => {
+    const res = await api.get("/stories");
+    setStoryGroups(res.data.storyGroups);
+  };
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchFeed(1, true);
+    await Promise.all([fetchFeed(1, true), fetchStories()]);
     setRefreshing(false);
   }, []);
 
@@ -47,6 +55,7 @@ export default function FeedScreen({ navigation }) {
 
   React.useEffect(() => {
     fetchFeed(1, true);
+    fetchStories();
   }, []);
 
   const pickImage = async () => {
@@ -83,27 +92,66 @@ export default function FeedScreen({ navigation }) {
     }
   };
 
-  const handleLike = async (postId) => {
-    // Optimistic update
+  const handleReact = async (postId, type) => {
+    // Optimistic update: apply/replace/remove the current user's reaction locally first
     setPosts((prev) =>
       prev.map((p) => {
         if (p._id !== postId) return p;
-        const liked = p.likes.includes(user.id);
-        return {
-          ...p,
-          likes: liked ? p.likes.filter((id) => id !== user.id) : [...p.likes, user.id],
-        };
+        const existing = p.reactions?.find((r) => r.userId === user.id || r.userId?._id === user.id);
+        let updatedReactions;
+        if (existing && existing.type === type) {
+          updatedReactions = p.reactions.filter((r) => r !== existing);
+        } else if (existing) {
+          updatedReactions = p.reactions.map((r) => (r === existing ? { ...r, type } : r));
+        } else {
+          updatedReactions = [...(p.reactions || []), { userId: user.id, type }];
+        }
+        return { ...p, reactions: updatedReactions };
       })
     );
     try {
-      await api.put(`/posts/${postId}/like`);
+      await api.put(`/posts/${postId}/react`, { type });
     } catch (err) {
       await fetchFeed(1, true); // revert on failure
     }
   };
 
+  const handleAddStory = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+    });
+    if (result.canceled) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: result.assets[0].uri,
+        name: "story.jpg",
+        type: "image/jpeg",
+      });
+      await api.post("/stories", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      fetchStories();
+    } catch (err) {
+      Alert.alert("Failed to post story", err.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const handleViewStory = (storyGroup) => {
+    navigation.navigate("StoryViewer", { storyGroup });
+  };
+
   return (
     <View style={styles.container}>
+      <StoryBar
+        storyGroups={storyGroups}
+        currentUser={user}
+        onAddStory={handleAddStory}
+        onViewStory={handleViewStory}
+      />
+
       <View style={styles.composer}>
         <TextInput
           style={styles.composerInput}
@@ -130,7 +178,7 @@ export default function FeedScreen({ navigation }) {
           <PostCard
             post={item}
             currentUserId={user?.id}
-            onLike={handleLike}
+            onReact={handleReact}
             onOpenComments={(postId) => navigation.navigate("Comments", { postId })}
           />
         )}

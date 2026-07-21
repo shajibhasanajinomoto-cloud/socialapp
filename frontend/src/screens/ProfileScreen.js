@@ -14,6 +14,12 @@ export default function ProfileScreen({ navigation }) {
     }
   }, [user]);
 
+  const handleReact = async (postId, type) => {
+    await api.put(`/posts/${postId}/react`, { type });
+    const res = await api.get(`/posts/user/${user.id}`);
+    setPosts(res.data.posts);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -35,7 +41,7 @@ export default function ProfileScreen({ navigation }) {
           <PostCard
             post={item}
             currentUserId={user?.id}
-            onLike={() => {}}
+            onReact={handleReact}
             onOpenComments={(postId) => navigation.navigate("Comments", { postId })}
           />
         )}

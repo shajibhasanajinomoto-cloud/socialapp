@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 import { useAuth } from "../context/AuthContext";
 import LoginScreen from "../screens/LoginScreen";
@@ -12,6 +12,14 @@ import ProfileScreen from "../screens/ProfileScreen";
 import ChatListScreen from "../screens/ChatListScreen";
 import ChatScreen from "../screens/ChatScreen";
 import CommentsScreen from "../screens/CommentsScreen";
+import NotificationsScreen from "../screens/NotificationsScreen";
+import SearchScreen from "../screens/SearchScreen";
+import FriendsScreen from "../screens/FriendsScreen";
+import UserProfileScreen from "../screens/UserProfileScreen";
+import GroupsScreen from "../screens/GroupsScreen";
+import CreateGroupScreen from "../screens/CreateGroupScreen";
+import GroupDetailScreen from "../screens/GroupDetailScreen";
+import StoryViewerScreen from "../screens/StoryViewerScreen";
 
 const AuthStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
@@ -26,13 +34,39 @@ function AuthNavigator() {
   );
 }
 
+function FeedHeaderRight({ navigation }) {
+  return (
+    <>
+      <TouchableOpacity onPress={() => navigation.navigate("Friends")} style={{ marginRight: 14 }}>
+        <Text style={{ fontSize: 18 }}>🧑‍🤝‍🧑</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Search")} style={{ marginRight: 14 }}>
+        <Text style={{ fontSize: 18 }}>🔍</Text>
+      </TouchableOpacity>
+    </>
+  );
+}
+
 function MainTabs() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: true }}>
       <Tab.Screen
         name="Feed"
         component={FeedScreen}
-        options={{ tabBarIcon: () => <Text>🏠</Text> }}
+        options={({ navigation }) => ({
+          tabBarIcon: () => <Text>🏠</Text>,
+          headerRight: () => <FeedHeaderRight navigation={navigation} />,
+        })}
+      />
+      <Tab.Screen
+        name="Groups"
+        component={GroupsScreen}
+        options={{ tabBarIcon: () => <Text>👥</Text> }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ tabBarIcon: () => <Text>🔔</Text> }}
       />
       <Tab.Screen
         name="Chats"
@@ -63,6 +97,28 @@ export default function AppNavigator() {
             name="Comments"
             component={CommentsScreen}
             options={{ title: "Comments" }}
+          />
+          <RootStack.Screen name="Search" component={SearchScreen} options={{ title: "Search" }} />
+          <RootStack.Screen name="Friends" component={FriendsScreen} options={{ title: "Friends" }} />
+          <RootStack.Screen
+            name="UserProfile"
+            component={UserProfileScreen}
+            options={{ title: "Profile" }}
+          />
+          <RootStack.Screen
+            name="CreateGroup"
+            component={CreateGroupScreen}
+            options={{ title: "Create Group" }}
+          />
+          <RootStack.Screen
+            name="GroupDetail"
+            component={GroupDetailScreen}
+            options={{ title: "Group" }}
+          />
+          <RootStack.Screen
+            name="StoryViewer"
+            component={StoryViewerScreen}
+            options={{ headerShown: false, presentation: "fullScreenModal" }}
           />
         </RootStack.Navigator>
       ) : (
