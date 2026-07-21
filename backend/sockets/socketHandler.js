@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Message = require("../models/Message");
+const Notification = require("../models/Notification");
 
 // userId -> socketId map for direct delivery
 const onlineUsers = new Map();
@@ -48,6 +49,12 @@ function socketHandler(io) {
 
         // Echo back to sender for optimistic UI confirmation
         socket.emit("message_sent", message);
+
+        await Notification.create({
+          recipient: receiverId,
+          sender: socket.userId,
+          type: "message",
+        });
       } catch (err) {
         socket.emit("message_error", { error: err.message });
       }

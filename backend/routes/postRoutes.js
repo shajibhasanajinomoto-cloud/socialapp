@@ -5,7 +5,7 @@ const {
   getFeed,
   getUserPosts,
   deletePost,
-  toggleLike,
+  toggleReaction,
   addComment,
   getComments,
 } = require("../controllers/postController");
@@ -16,7 +16,7 @@ router.post("/", protect, upload.single("image"), createPost);
 router.get("/", protect, getFeed);
 router.get("/user/:userId", protect, getUserPosts);
 router.delete("/:id", protect, deletePost);
-router.put("/:id/like", protect, toggleLike);
+router.put("/:id/react", protect, toggleReaction);
 router.post("/:id/comments", protect, addComment);
 router.get("/:id/comments", protect, getComments);
 

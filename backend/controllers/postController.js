@@ -1,6 +1,7 @@
 const streamifier = require("stream");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
+const Notification = require("../models/Notification");
 const cloudinary = require("../config/cloudinary");
 
 const uploadBufferToCloudinary = (buffer) =>
@@ -18,7 +19,7 @@ const uploadBufferToCloudinary = (buffer) =>
 // POST /api/posts  (create)
 exports.createPost = async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, groupId } = req.body;
     let imageUrl = "";
     let imagePublicId = "";
 
@@ -33,6 +34,7 @@ exports.createPost = async (req, res) => {
       content,
       imageUrl,
       imagePublicId,
+      groupId: groupId || null,
     });
 
     const populated = await post.populate("userId", "name avatarUrl");
@@ -103,24 +105,53 @@ exports.deletePost = async (req, res) => {
   }
 };
 
-// PUT /api/posts/:id/like  (toggle like)
-exports.toggleLike = async (req, res) => {
+// PUT /api/posts/:id/react  (set/change/remove a reaction: like, love, haha, wow, sad, angry)
+exports.toggleReaction = async (req, res) => {
   try {
+    const { type } = req.body; // one of: like, love, haha, wow, sad, angry
+    const validTypes = ["like", "love", "haha", "wow", "sad", "angry"];
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({ message: "Invalid reaction type" });
+    }
+
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    const alreadyLiked = post.likes.some((id) => id.toString() === req.userId);
+    const existingIndex = post.reactions.findIndex((r) => r.userId.toString() === req.userId);
+    let action = "added";
 
-    if (alreadyLiked) {
-      post.likes = post.likes.filter((id) => id.toString() !== req.userId);
+    if (existingIndex >= 0) {
+      if (post.reactions[existingIndex].type === type) {
+        // Same reaction tapped again -> remove it
+        post.reactions.splice(existingIndex, 1);
+        action = "removed";
+      } else {
+        // Different reaction -> change it
+        post.reactions[existingIndex].type = type;
+        action = "changed";
+      }
     } else {
-      post.likes.push(req.userId);
+      post.reactions.push({ userId: req.userId, type });
     }
 
     await post.save();
-    res.status(200).json({ likesCount: post.likes.length, liked: !alreadyLiked });
+
+    if (action !== "removed" && post.userId.toString() !== req.userId) {
+      await Notification.create({
+        recipient: post.userId,
+        sender: req.userId,
+        type: "like",
+        postId: post._id,
+      });
+    }
+
+    // Summarize counts per reaction type for easy frontend rendering
+    const counts = {};
+    for (const r of post.reactions) counts[r.type] = (counts[r.type] || 0) + 1;
+
+    res.status(200).json({ reactions: post.reactions, counts, totalCount: post.reactions.length, action });
   } catch (err) {
-    res.status(500).json({ message: "Failed to toggle like", error: err.message });
+    res.status(500).json({ message: "Failed to react to post", error: err.message });
   }
 };
 
@@ -141,6 +172,15 @@ exports.addComment = async (req, res) => {
 
     post.commentsCount += 1;
     await post.save();
+
+    if (post.userId.toString() !== req.userId) {
+      await Notification.create({
+        recipient: post.userId,
+        sender: req.userId,
+        type: "comment",
+        postId: post._id,
+      });
+    }
 
     const populated = await comment.populate("userId", "name avatarUrl");
     res.status(201).json({ comment: populated });
