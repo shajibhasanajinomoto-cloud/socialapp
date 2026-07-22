@@ -2,7 +2,8 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { SocketProvider } from "./src/context/SocketContext";
-import AppNavigator from "./src/navigation/AppNavigator";
+import AppNavigator, { navigationRef } from "./src/navigation/AppNavigator";
+import IncomingCallBanner from "./src/components/IncomingCallBanner";
 
 // Small bridge so SocketProvider can access the logged-in user from AuthContext
 function AppContent() {
@@ -10,6 +11,7 @@ function AppContent() {
   return (
     <SocketProvider user={user}>
       <AppNavigator />
+      <IncomingCallBanner navigationRef={navigationRef} />
     </SocketProvider>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, TouchableOpacity } from "react-native";
@@ -20,6 +20,9 @@ import GroupsScreen from "../screens/GroupsScreen";
 import CreateGroupScreen from "../screens/CreateGroupScreen";
 import GroupDetailScreen from "../screens/GroupDetailScreen";
 import StoryViewerScreen from "../screens/StoryViewerScreen";
+import CallScreen from "../screens/CallScreen";
+
+export const navigationRef = createNavigationContainerRef();
 
 const AuthStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
@@ -88,7 +91,7 @@ export default function AppNavigator() {
   if (loading) return null; // could show a splash/loading spinner here
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {user ? (
         <RootStack.Navigator>
           <RootStack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
@@ -118,6 +121,11 @@ export default function AppNavigator() {
           <RootStack.Screen
             name="StoryViewer"
             component={StoryViewerScreen}
+            options={{ headerShown: false, presentation: "fullScreenModal" }}
+          />
+          <RootStack.Screen
+            name="Call"
+            component={CallScreen}
             options={{ headerShown: false, presentation: "fullScreenModal" }}
           />
         </RootStack.Navigator>

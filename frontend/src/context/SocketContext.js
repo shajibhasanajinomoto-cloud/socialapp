@@ -11,6 +11,7 @@ const SocketContext = createContext();
 export const SocketProvider = ({ children, user }) => {
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
+  const [incomingCall, setIncomingCall] = useState(null); // { callerId, offer, callType }
 
   useEffect(() => {
     let isMounted = true;
@@ -26,6 +27,7 @@ export const SocketProvider = ({ children, user }) => {
 
       socket.on("connect", () => isMounted && setConnected(true));
       socket.on("disconnect", () => isMounted && setConnected(false));
+      socket.on("incoming_call", (data) => isMounted && setIncomingCall(data));
 
       socketRef.current = socket;
     };
@@ -39,7 +41,7 @@ export const SocketProvider = ({ children, user }) => {
   }, [user?.id]);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, connected }}>
+    <SocketContext.Provider value={{ socket: socketRef.current, connected, incomingCall, setIncomingCall }}>
       {children}
     </SocketContext.Provider>
   );

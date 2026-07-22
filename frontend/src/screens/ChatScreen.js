@@ -14,13 +14,29 @@ import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 import MessageBubble from "../components/MessageBubble";
 
-export default function ChatScreen({ route }) {
-  const { otherUserId } = route.params;
+export default function ChatScreen({ route, navigation }) {
+  const { otherUserId, otherUserName } = route.params;
   const { user } = useAuth();
   const { socket } = useSocket();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const flatListRef = useRef(null);
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: otherUserName || "Chat",
+      headerRight: () => (
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity onPress={() => startCall("audio")} style={{ marginRight: 18 }}>
+            <Text style={{ fontSize: 20 }}>📞</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => startCall("video")} style={{ marginRight: 14 }}>
+            <Text style={{ fontSize: 20 }}>🎥</Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [navigation, otherUserName]);
 
   useEffect(() => {
     api.get(`/messages/${otherUserId}`).then((res) => setMessages(res.data.messages));
@@ -52,6 +68,15 @@ export default function ChatScreen({ route }) {
     if (!text.trim() || !socket) return;
     socket.emit("send_message", { receiverId: otherUserId, content: text.trim() });
     setText("");
+  };
+
+  const startCall = (callType) => {
+    navigation.navigate("Call", {
+      otherUserId,
+      otherUserName: otherUserName || "User",
+      callType,
+      mode: "outgoing",
+    });
   };
 
   const scrollToEnd = useCallback(() => {
