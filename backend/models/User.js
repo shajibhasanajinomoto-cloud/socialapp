@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     },
     password: { type: String, required: true, select: false },
     avatarUrl: { type: String, default: "" },
+    coverImageUrl: { type: String, default: "" },
     bio: { type: String, default: "" },
     refreshToken: { type: String, select: false },
   },

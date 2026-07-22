@@ -15,6 +15,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const storyRoutes = require("./routes/storyRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 const searchRoutes = require("./routes/searchRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 const server = http.createServer(app);
@@ -39,6 +40,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/stories", storyRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => res.json({ status: "ok", message: "Social App API running" }));
 
