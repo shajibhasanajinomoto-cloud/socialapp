@@ -27,7 +27,7 @@ function socketHandler(io) {
     // Notify others this user is online (optional, for presence indicators)
     socket.broadcast.emit("user_online", { userId: socket.userId });
 
-    socket.on("send_message", async ({ receiverId, content }) => {
+    socket.on("send_message", async ({ receiverId, content, mediaUrl, mediaType }) => {
       try {
         const conversationId = Message.buildConversationId(socket.userId, receiverId);
 
@@ -35,7 +35,9 @@ function socketHandler(io) {
           conversationId,
           senderId: socket.userId,
           receiverId,
-          content,
+          content: content || "",
+          mediaUrl: mediaUrl || "",
+          mediaType: mediaType || "text",
           status: "sent",
         });
 

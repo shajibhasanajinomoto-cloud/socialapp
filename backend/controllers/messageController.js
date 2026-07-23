@@ -1,5 +1,35 @@
 const mongoose = require("mongoose");
 const Message = require("../models/Message");
+const cloudinary = require("../config/cloudinary");
+
+const uploadBufferToCloudinary = (buffer, folder, resourceType) =>
+  new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: resourceType },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    require("stream").Readable.from(buffer).pipe(uploadStream);
+  });
+
+// POST /api/messages/upload-media  (uploads an image or voice note, returns the URL)
+// The frontend then sends this URL over the socket as part of the chat message.
+exports.uploadMedia = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "File is required" });
+
+    const mediaType = req.body.mediaType === "voice" ? "voice" : "image";
+    const resourceType = mediaType === "voice" ? "video" : "image"; // Cloudinary treats audio under "video"
+
+    const result = await uploadBufferToCloudinary(req.file.buffer, "socialapp/chat-media", resourceType);
+
+    res.status(200).json({ mediaUrl: result.secure_url, mediaType });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to upload media", error: err.message });
+  }
+};
 
 // GET /api/messages/:otherUserId  (fetch conversation history)
 exports.getConversation = async (req, res) => {

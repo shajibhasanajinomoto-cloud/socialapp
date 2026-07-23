@@ -5,7 +5,9 @@ const messageSchema = new mongoose.Schema(
     conversationId: { type: String, required: true, index: true },
     senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    content: { type: String, required: true },
+    content: { type: String, default: "" },
+    mediaUrl: { type: String, default: "" },
+    mediaType: { type: String, enum: ["text", "image", "voice"], default: "text" },
     status: { type: String, enum: ["sent", "delivered", "read"], default: "sent" },
   },
   { timestamps: { createdAt: "timestamp", updatedAt: false } }
