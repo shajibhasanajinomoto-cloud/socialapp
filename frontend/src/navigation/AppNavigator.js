@@ -21,6 +21,8 @@ import CreateGroupScreen from "../screens/CreateGroupScreen";
 import GroupDetailScreen from "../screens/GroupDetailScreen";
 import StoryViewerScreen from "../screens/StoryViewerScreen";
 import CallScreen from "../screens/CallScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
+import EditFamilyScreen from "../screens/EditFamilyScreen";
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -127,6 +129,16 @@ export default function AppNavigator() {
             name="Call"
             component={CallScreen}
             options={{ headerShown: false, presentation: "fullScreenModal" }}
+          />
+          <RootStack.Screen
+            name="EditProfile"
+            component={EditProfileScreen}
+            options={{ title: "Edit Profile" }}
+          />
+          <RootStack.Screen
+            name="EditFamily"
+            component={EditFamilyScreen}
+            options={{ title: "Family Members" }}
           />
         </RootStack.Navigator>
       ) : (

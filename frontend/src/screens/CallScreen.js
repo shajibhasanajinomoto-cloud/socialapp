@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
-import { RTCPeerConnection, RTCView, mediaDevices } from "react-native-webrtc";
+import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, RTCView, mediaDevices } from "react-native-webrtc";
 import { useSocket } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
 
@@ -57,7 +57,7 @@ export default function CallScreen({ route, navigation }) {
       await pc.setLocalDescription(offer);
       socket.emit("call_user", { receiverId: otherUserId, offer, callType });
     } else {
-      await pc.setRemoteDescription(incomingOffer);
+      await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer));
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
       socket.emit("answer_call", { callerId: otherUserId, answer });
@@ -65,12 +65,12 @@ export default function CallScreen({ route, navigation }) {
 
     // Signaling event listeners
     socket.on("call_answered", async ({ answer }) => {
-      await pc.setRemoteDescription(answer);
+      await pc.setRemoteDescription(new RTCSessionDescription(answer));
     });
 
     socket.on("ice_candidate", async ({ candidate }) => {
       try {
-        await pc.addIceCandidate(candidate);
+        await pc.addIceCandidate(new RTCIceCandidate(candidate));
       } catch (e) {
         // Candidate arrived before remote description was set; safe to ignore occasionally
       }

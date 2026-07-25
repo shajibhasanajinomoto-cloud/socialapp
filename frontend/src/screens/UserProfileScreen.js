@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import api from "../api/api";
 import PostCard from "../components/PostCard";
+import ProfileHeader from "../components/ProfileHeader";
 import { useAuth } from "../context/AuthContext";
 
 export default function UserProfileScreen({ route, navigation }) {
   const { userId } = route.params;
   const { user: currentUser } = useAuth();
   const [profileUser, setProfileUser] = useState(null);
+  const [friendsCount, setFriendsCount] = useState(0);
   const [posts, setPosts] = useState([]);
   const [friendStatus, setFriendStatus] = useState("none"); // none | pending | accepted
-  const [friendshipId, setFriendshipId] = useState(null);
   const [isRequester, setIsRequester] = useState(false);
 
   const loadData = async () => {
-    const [postsRes, statusRes] = await Promise.all([
+    const [userRes, postsRes, statusRes] = await Promise.all([
+      api.get(`/users/${userId}`),
       api.get(`/posts/user/${userId}`),
       api.get(`/friends/status/${userId}`),
     ]);
+    setProfileUser(userRes.data.user);
+    setFriendsCount(userRes.data.friendsCount);
     setPosts(postsRes.data.posts);
-    if (postsRes.data.posts.length > 0) setProfileUser(postsRes.data.posts[0].userId);
     setFriendStatus(statusRes.data.status);
-    setFriendshipId(statusRes.data.friendshipId);
     setIsRequester(statusRes.data.requester === currentUser.id);
   };
 
@@ -37,6 +39,19 @@ export default function UserProfileScreen({ route, navigation }) {
   const handleReact = async (postId, type) => {
     await api.put(`/posts/${postId}/react`, { type });
     loadData();
+  };
+
+  const goToChat = () => {
+    navigation.navigate("Chat", { otherUserId: userId, otherUserName: profileUser?.name });
+  };
+
+  const goToCall = (callType) => {
+    navigation.navigate("Call", {
+      otherUserId: userId,
+      otherUserName: profileUser?.name || "User",
+      callType,
+      mode: "outgoing",
+    });
   };
 
   const renderFriendButton = () => {
@@ -63,18 +78,34 @@ export default function UserProfileScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={{ uri: profileUser?.avatarUrl || "https://placehold.co/80x80" }}
-          style={styles.avatar}
-        />
-        <Text style={styles.name}>{profileUser?.name || "User"}</Text>
-        {renderFriendButton()}
-      </View>
-
       <FlatList
         data={posts}
         keyExtractor={(item) => item._id}
+        ListHeaderComponent={
+          <ProfileHeader
+            user={profileUser}
+            friendsCount={friendsCount}
+            isOwnProfile={false}
+            onPressFamilyMember={(memberId) => memberId && navigation.push("UserProfile", { userId: memberId })}
+            actions={
+              <>
+                {renderFriendButton()}
+                <TouchableOpacity style={styles.actionBtn} onPress={goToChat}>
+                  <Text style={styles.actionIcon}>💬</Text>
+                  <Text style={styles.actionLabel}>Message</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionBtn} onPress={() => goToCall("audio")}>
+                  <Text style={styles.actionIcon}>📞</Text>
+                  <Text style={styles.actionLabel}>Voice</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionBtn} onPress={() => goToCall("video")}>
+                  <Text style={styles.actionIcon}>🎥</Text>
+                  <Text style={styles.actionLabel}>Video</Text>
+                </TouchableOpacity>
+              </>
+            }
+          />
+        }
         renderItem={({ item }) => (
           <PostCard
             post={item}
@@ -91,15 +122,15 @@ export default function UserProfileScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f5f5f5" },
-  header: { alignItems: "center", backgroundColor: "#fff", padding: 24, borderBottomWidth: 1, borderBottomColor: "#eee" },
-  avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: "#eee", marginBottom: 10 },
-  name: { fontSize: 20, fontWeight: "700", marginBottom: 12 },
-  friendBtn: { paddingVertical: 8, paddingHorizontal: 20, borderRadius: 8 },
+  friendBtn: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
   addBtn: { backgroundColor: "#2563eb" },
-  addBtnText: { color: "#fff", fontWeight: "600" },
+  addBtnText: { color: "#fff", fontWeight: "600", fontSize: 13 },
   friendsBtn: { backgroundColor: "#dcfce7" },
-  friendsBtnText: { color: "#16a34a", fontWeight: "600" },
+  friendsBtnText: { color: "#16a34a", fontWeight: "600", fontSize: 13 },
   pendingBtn: { backgroundColor: "#f3f4f6" },
-  pendingBtnText: { color: "#555", fontWeight: "600", fontSize: 12 },
+  pendingBtnText: { color: "#555", fontWeight: "600", fontSize: 11 },
+  actionBtn: { alignItems: "center" },
+  actionIcon: { fontSize: 20 },
+  actionLabel: { fontSize: 10, color: "#555", marginTop: 2 },
   empty: { textAlign: "center", marginTop: 40, color: "#999" },
 });

@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { useSocket } from "../context/SocketContext";
+import api from "../api/api";
 
 export default function IncomingCallBanner({ navigationRef }) {
   const { socket, incomingCall, setIncomingCall } = useSocket();
+  const [callerName, setCallerName] = useState("Someone");
+
+  useEffect(() => {
+    if (!incomingCall) return;
+    setCallerName("Someone");
+    api
+      .get(`/users/${incomingCall.callerId}`)
+      .then((res) => setCallerName(res.data.user.name))
+      .catch(() => {});
+  }, [incomingCall]);
 
   if (!incomingCall) return null;
 
@@ -12,7 +23,7 @@ export default function IncomingCallBanner({ navigationRef }) {
     setIncomingCall(null);
     navigationRef.current?.navigate("Call", {
       otherUserId: callerId,
-      otherUserName: "Caller", // resolved name isn't known here; CallScreen can be enhanced to fetch it
+      otherUserName: callerName,
       callType,
       mode: "incoming",
       incomingOffer: offer,
@@ -29,7 +40,7 @@ export default function IncomingCallBanner({ navigationRef }) {
       <View style={styles.overlay}>
         <View style={styles.card}>
           <Text style={styles.title}>
-            Incoming {incomingCall.callType === "video" ? "Video" : "Voice"} Call
+            {callerName} is calling ({incomingCall.callType === "video" ? "Video" : "Voice"})
           </Text>
           <View style={styles.buttonRow}>
             <TouchableOpacity style={styles.declineBtn} onPress={handleDecline}>
