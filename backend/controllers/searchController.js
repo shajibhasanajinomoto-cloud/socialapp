@@ -13,7 +13,7 @@ exports.search = async (req, res) => {
 
     const [users, posts] = await Promise.all([
       User.find({ name: regex }).select("name avatarUrl bio").limit(20),
-      Post.find({ content: regex }).populate("userId", "name avatarUrl").limit(20).sort({ createdAt: -1 }),
+      Post.find({ content: regex, groupId: null }).populate("userId", "name avatarUrl").limit(20).sort({ createdAt: -1 }),
     ]);
 
     res.status(200).json({ users, posts });

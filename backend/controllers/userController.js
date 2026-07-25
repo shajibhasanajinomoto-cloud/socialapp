@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Friendship = require("../models/Friendship");
 const cloudinary = require("../config/cloudinary");
 
 const uploadBufferToCloudinary = (buffer, folder) =>
@@ -68,10 +69,65 @@ exports.updateCover = async (req, res) => {
 // GET /api/users/:id
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("name email avatarUrl coverImageUrl bio");
+    const user = await User.findById(req.params.id)
+      .select(
+        "name email avatarUrl coverImageUrl bio work education location hometown relationshipStatus relationshipSince familyMembers birthday"
+      )
+      .populate("familyMembers.user", "name avatarUrl");
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ user });
+
+    const friendsCount = await Friendship.countDocuments({
+      status: "accepted",
+      $or: [{ requester: req.params.id }, { recipient: req.params.id }],
+    });
+
+    res.status(200).json({ user, friendsCount });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch user", error: err.message });
+  }
+};
+
+// PUT /api/users/me  (update bio, work, education, location, birthday)
+exports.updateProfile = async (req, res) => {
+  try {
+    const { bio, work, education, location, hometown, relationshipStatus, relationshipSince, birthday } = req.body;
+    const updates = {};
+    if (bio !== undefined) updates.bio = bio;
+    if (work !== undefined) updates.work = work;
+    if (education !== undefined) updates.education = education;
+    if (location !== undefined) updates.location = location;
+    if (hometown !== undefined) updates.hometown = hometown;
+    if (relationshipStatus !== undefined) updates.relationshipStatus = relationshipStatus;
+    if (relationshipSince !== undefined) updates.relationshipSince = relationshipSince || null;
+    if (birthday !== undefined) updates.birthday = birthday || null;
+
+    const user = await User.findByIdAndUpdate(req.userId, updates, { new: true });
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update profile", error: err.message });
+  }
+};
+
+// PUT /api/users/me/family  (body: { familyMembers: [{ userId, relation }] })
+exports.updateFamilyMembers = async (req, res) => {
+  try {
+    const { familyMembers } = req.body;
+    if (!Array.isArray(familyMembers)) {
+      return res.status(400).json({ message: "familyMembers must be an array" });
+    }
+
+    const cleaned = familyMembers
+      .filter((m) => m.userId && m.relation)
+      .map((m) => ({ user: m.userId, relation: m.relation.trim() }));
+
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { familyMembers: cleaned },
+      { new: true }
+    ).populate("familyMembers.user", "name avatarUrl");
+
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update family members", error: err.message });
   }
 };

@@ -87,6 +87,13 @@ exports.leaveGroup = async (req, res) => {
 // GET /api/groups/:id/posts
 exports.getGroupPosts = async (req, res) => {
   try {
+    const group = await Group.findById(req.params.id);
+    if (!group) return res.status(404).json({ message: "Group not found" });
+
+    if (group.privacy === "private" && !group.members.some((id) => id.toString() === req.userId)) {
+      return res.status(403).json({ message: "This group is private" });
+    }
+
     const posts = await Post.find({ groupId: req.params.id })
       .sort({ createdAt: -1 })
       .populate("userId", "name avatarUrl");

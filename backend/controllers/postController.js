@@ -2,6 +2,7 @@ const streamifier = require("stream");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Notification = require("../models/Notification");
+const Group = require("../models/Group");
 const cloudinary = require("../config/cloudinary");
 
 const uploadBufferToCloudinary = (buffer) =>
@@ -20,6 +21,15 @@ const uploadBufferToCloudinary = (buffer) =>
 exports.createPost = async (req, res) => {
   try {
     const { content, groupId } = req.body;
+
+    if (groupId) {
+      const group = await Group.findById(groupId);
+      if (!group) return res.status(404).json({ message: "Group not found" });
+      if (!group.members.some((id) => id.toString() === req.userId)) {
+        return res.status(403).json({ message: "You must be a member of this group to post" });
+      }
+    }
+
     let imageUrl = "";
     let imagePublicId = "";
 
@@ -51,13 +61,13 @@ exports.getFeed = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const posts = await Post.find()
+    const posts = await Post.find({ groupId: null })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate("userId", "name avatarUrl");
 
-    const total = await Post.countDocuments();
+    const total = await Post.countDocuments({ groupId: null });
 
     res.status(200).json({
       posts,
@@ -73,7 +83,7 @@ exports.getFeed = async (req, res) => {
 // GET /api/posts/user/:userId  (profile feed)
 exports.getUserPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ userId: req.params.userId })
+    const posts = await Post.find({ userId: req.params.userId, groupId: null })
       .sort({ createdAt: -1 })
       .populate("userId", "name avatarUrl");
     res.status(200).json({ posts });
