@@ -1,5 +1,7 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors, gradients } from "../theme";
 
 export default function StoryBar({ storyGroups, currentUser, onAddStory, onViewStory }) {
   return (
@@ -23,12 +25,17 @@ export default function StoryBar({ storyGroups, currentUser, onAddStory, onViewS
           style={styles.storyItem}
           onPress={() => onViewStory(group)}
         >
-          <View style={styles.ring}>
+          <LinearGradient
+            colors={gradients.story}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.ring}
+          >
             <Image
               source={{ uri: group.user.avatarUrl || "https://placehold.co/60x60" }}
               style={styles.avatar}
             />
-          </View>
+          </LinearGradient>
           <Text style={styles.label} numberOfLines={1}>{group.user.name}</Text>
         </TouchableOpacity>
       ))}
@@ -37,39 +44,39 @@ export default function StoryBar({ storyGroups, currentUser, onAddStory, onViewS
 }
 
 const styles = StyleSheet.create({
-  bar: { backgroundColor: "#fff", paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#eee" },
+  bar: { backgroundColor: colors.surface, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: colors.border },
   storyItem: { alignItems: "center", width: 72, marginHorizontal: 6 },
   ring: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: "#2563eb",
-    padding: 2,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    padding: 3,
     alignItems: "center",
     justifyContent: "center",
   },
   addRing: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.border,
   },
-  avatar: { width: 54, height: 54, borderRadius: 27, backgroundColor: "#eee" },
+  avatar: { width: 54, height: 54, borderRadius: 27, backgroundColor: colors.border, borderWidth: 2, borderColor: colors.surface },
   plusBadge: {
     position: "absolute",
     bottom: -2,
     right: -2,
-    backgroundColor: "#2563eb",
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    backgroundColor: colors.accent,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: colors.surface,
   },
-  plusText: { color: "#fff", fontWeight: "700", fontSize: 12, lineHeight: 14 },
-  label: { fontSize: 11, marginTop: 4, textAlign: "center", color: "#333" },
+  plusText: { color: "#fff", fontWeight: "700", fontSize: 13, lineHeight: 15 },
+  label: { fontSize: 11, marginTop: 5, textAlign: "center", color: colors.textPrimary, fontWeight: "500" },
 });

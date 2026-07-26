@@ -69,7 +69,7 @@ export default function PostCard({ post, currentUserId, onReact, onOpenComments 
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 20,
     padding: 14,
     marginHorizontal: 12,
     marginVertical: 8,
@@ -79,15 +79,15 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   header: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
-  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10, backgroundColor: "#eee" },
+  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10, backgroundColor: "#F0E6DE" },
   name: { fontWeight: "600", fontSize: 15 },
   content: { fontSize: 15, marginBottom: 8, lineHeight: 20 },
-  image: { width: "100%", height: 220, borderRadius: 10, marginBottom: 8, backgroundColor: "#f2f2f2" },
+  image: { width: "100%", height: 220, borderRadius: 10, marginBottom: 8, backgroundColor: "#F5EFEA" },
   reactionSummary: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
   reactionEmojis: { fontSize: 14, marginRight: 6 },
   reactionCount: { fontSize: 13, color: "#777" },
-  actions: { flexDirection: "row", justifyContent: "space-between", marginTop: 6, borderTopWidth: 1, borderTopColor: "#f0f0f0", paddingTop: 8 },
+  actions: { flexDirection: "row", justifyContent: "space-between", marginTop: 6, borderTopWidth: 1, borderTopColor: "#F0E6DE", paddingTop: 8 },
   actionBtn: { paddingVertical: 4 },
   actionText: { color: "#555", fontSize: 14 },
-  reactedText: { color: "#2563eb", fontSize: 14, fontWeight: "600" },
+  reactedText: { color: "#FF6B4A", fontSize: 14, fontWeight: "600" },
 });

@@ -122,10 +122,10 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
-  editProfileBtn: { backgroundColor: "#eff6ff", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
-  editProfileText: { color: "#2563eb", fontWeight: "600", fontSize: 13 },
-  logoutButton: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, backgroundColor: "#fee2e2" },
-  logoutText: { color: "#dc2626", fontWeight: "600", fontSize: 13 },
+  container: { flex: 1, backgroundColor: "#FBF6F2" },
+  editProfileBtn: { backgroundColor: "#FFE7E0", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
+  editProfileText: { color: "#FF6B4A", fontWeight: "600", fontSize: 13 },
+  logoutButton: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, backgroundColor: "#FDE7E7" },
+  logoutText: { color: "#E5484D", fontWeight: "600", fontSize: 13 },
   empty: { textAlign: "center", marginTop: 40, color: "#999" },
 });

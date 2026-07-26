@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
   textarea: { minHeight: 80, textAlignVertical: "top" },
   privacyRow: { flexDirection: "row", gap: 10 },
   privacyOption: { flex: 1, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: "#ddd", alignItems: "center" },
-  privacyOptionActive: { backgroundColor: "#2563eb", borderColor: "#2563eb" },
+  privacyOptionActive: { backgroundColor: "#FF6B4A", borderColor: "#FF6B4A" },
   privacyText: { color: "#555", fontWeight: "600" },
   privacyTextActive: { color: "#fff", fontWeight: "600" },
-  submitBtn: { backgroundColor: "#2563eb", padding: 16, borderRadius: 10, alignItems: "center", marginTop: 30 },
+  submitBtn: { backgroundColor: "#FF6B4A", padding: 16, borderRadius: 10, alignItems: "center", marginTop: 30 },
   submitText: { color: "#fff", fontWeight: "700", fontSize: 15 },
 });

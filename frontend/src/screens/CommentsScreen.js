@@ -73,7 +73,7 @@ export default function CommentsScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  commentRow: { marginBottom: 14, borderBottomWidth: 1, borderBottomColor: "#f0f0f0", paddingBottom: 10 },
+  commentRow: { marginBottom: 14, borderBottomWidth: 1, borderBottomColor: "#F0E6DE", paddingBottom: 10 },
   commentAuthor: { fontWeight: "600", marginBottom: 2 },
   commentText: { color: "#333" },
   empty: { textAlign: "center", marginTop: 30, color: "#999" },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: "#F0E6DE",
     backgroundColor: "#fff",
   },
   input: {
@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginRight: 8,
   },
-  sendButton: { backgroundColor: "#2563eb", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 },
+  sendButton: { backgroundColor: "#FF6B4A", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 },
   sendText: { color: "#fff", fontWeight: "600" },
 });

@@ -193,8 +193,8 @@ export default function FeedScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
-  composer: { backgroundColor: "#fff", padding: 14, borderBottomWidth: 1, borderBottomColor: "#eee" },
+  container: { flex: 1, backgroundColor: "#FBF6F2" },
+  composer: { backgroundColor: "#fff", padding: 14, borderBottomWidth: 1, borderBottomColor: "#F0E6DE" },
   composerInput: { fontSize: 15, minHeight: 44, textAlignVertical: "top" },
   previewImage: { width: "100%", height: 160, borderRadius: 8, marginTop: 8 },
   composerActions: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
-  pickImageText: { color: "#2563eb", fontSize: 14 },
-  postButton: { backgroundColor: "#2563eb", paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8 },
+  pickImageText: { color: "#FF6B4A", fontSize: 14 },
+  postButton: { backgroundColor: "#FF6B4A", paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8 },
   postButtonText: { color: "#fff", fontWeight: "600" },
 });

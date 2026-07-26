@@ -80,9 +80,9 @@ const styles = StyleSheet.create({
   empty: { textAlign: "center", color: "#999", marginTop: 30 },
   sectionTitle: { fontWeight: "700", fontSize: 14, color: "#555", marginTop: 10, marginBottom: 6 },
   userRow: { flexDirection: "row", alignItems: "center", paddingVertical: 8 },
-  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10, backgroundColor: "#eee" },
+  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10, backgroundColor: "#F0E6DE" },
   userName: { fontSize: 15, fontWeight: "600" },
-  postRow: { paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: "#f0f0f0" },
+  postRow: { paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: "#F0E6DE" },
   postAuthor: { fontWeight: "600", fontSize: 13, marginBottom: 2 },
   postContent: { color: "#555", fontSize: 14 },
 });

@@ -66,9 +66,9 @@ export default function NotificationsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  row: { flexDirection: "row", alignItems: "center", padding: 14, borderBottomWidth: 1, borderBottomColor: "#f0f0f0" },
-  unread: { backgroundColor: "#eff6ff" },
-  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 12, backgroundColor: "#eee" },
+  row: { flexDirection: "row", alignItems: "center", padding: 14, borderBottomWidth: 1, borderBottomColor: "#F0E6DE" },
+  unread: { backgroundColor: "#FFE7E0" },
+  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 12, backgroundColor: "#F0E6DE" },
   text: { fontSize: 14, color: "#333" },
   name: { fontWeight: "700" },
   time: { fontSize: 12, color: "#999", marginTop: 2 },

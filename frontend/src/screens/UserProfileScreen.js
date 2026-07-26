@@ -121,13 +121,13 @@ export default function UserProfileScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
+  container: { flex: 1, backgroundColor: "#FBF6F2" },
   friendBtn: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
-  addBtn: { backgroundColor: "#2563eb" },
+  addBtn: { backgroundColor: "#FF6B4A" },
   addBtnText: { color: "#fff", fontWeight: "600", fontSize: 13 },
-  friendsBtn: { backgroundColor: "#dcfce7" },
-  friendsBtnText: { color: "#16a34a", fontWeight: "600", fontSize: 13 },
-  pendingBtn: { backgroundColor: "#f3f4f6" },
+  friendsBtn: { backgroundColor: "#E3F5EF" },
+  friendsBtnText: { color: "#2FAF8A", fontWeight: "600", fontSize: 13 },
+  pendingBtn: { backgroundColor: "#F5EFEA" },
   pendingBtnText: { color: "#555", fontWeight: "600", fontSize: 11 },
   actionBtn: { alignItems: "center" },
   actionIcon: { fontSize: 20 },

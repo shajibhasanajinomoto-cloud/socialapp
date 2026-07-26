@@ -209,7 +209,7 @@ export default function ChatScreen({ route, navigation }) {
 
       {uploading && (
         <View style={styles.uploadingRow}>
-          <ActivityIndicator size="small" color="#2563eb" />
+          <ActivityIndicator size="small" color="#FF6B4A" />
           <Text style={styles.uploadingText}>Sending...</Text>
         </View>
       )}
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: "#F0E6DE",
   },
   iconBtn: { paddingHorizontal: 6, paddingVertical: 6 },
   iconText: { fontSize: 20 },
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 6,
   },
-  sendButton: { backgroundColor: "#2563eb", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 },
+  sendButton: { backgroundColor: "#FF6B4A", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20 },
   sendText: { color: "#fff", fontWeight: "600" },
   uploadingRow: { flexDirection: "row", alignItems: "center", padding: 8, paddingLeft: 16 },
   uploadingText: { marginLeft: 8, color: "#777", fontSize: 12 },
@@ -277,12 +277,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     borderTopWidth: 1,
-    borderTopColor: "#eee",
-    backgroundColor: "#fef2f2",
+    borderTopColor: "#F0E6DE",
+    backgroundColor: "#FDF3F0",
   },
-  recordingText: { flex: 1, color: "#dc2626", fontWeight: "600", fontSize: 13 },
+  recordingText: { flex: 1, color: "#E5484D", fontWeight: "600", fontSize: 13 },
   cancelBtn: { paddingHorizontal: 12, paddingVertical: 8, marginRight: 6 },
   cancelText: { color: "#777", fontWeight: "600" },
-  sendVoiceBtn: { backgroundColor: "#2563eb", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8 },
+  sendVoiceBtn: { backgroundColor: "#FF6B4A", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8 },
   sendVoiceText: { color: "#fff", fontWeight: "600" },
 });

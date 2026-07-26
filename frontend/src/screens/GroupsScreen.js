@@ -62,8 +62,8 @@ export default function GroupsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
-  createBtn: { backgroundColor: "#2563eb", margin: 14, padding: 12, borderRadius: 10, alignItems: "center" },
+  container: { flex: 1, backgroundColor: "#FBF6F2" },
+  createBtn: { backgroundColor: "#FF6B4A", margin: 14, padding: 12, borderRadius: 10, alignItems: "center" },
   createBtnText: { color: "#fff", fontWeight: "700" },
   groupCard: {
     flexDirection: "row",
@@ -72,21 +72,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 14,
     marginBottom: 10,
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 20,
   },
   groupCover: {
     width: 50,
     height: 50,
     borderRadius: 10,
-    backgroundColor: "#dbeafe",
+    backgroundColor: "#EFE9F7",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
   },
-  groupInitial: { fontSize: 20, fontWeight: "700", color: "#2563eb" },
+  groupInitial: { fontSize: 20, fontWeight: "700", color: "#FF6B4A" },
   groupName: { fontWeight: "700", fontSize: 15 },
   groupMeta: { color: "#777", fontSize: 12, marginTop: 2 },
-  joinBtn: { backgroundColor: "#eff6ff", paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8 },
-  joinBtnText: { color: "#2563eb", fontWeight: "600", fontSize: 12 },
+  joinBtn: { backgroundColor: "#FFE7E0", paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8 },
+  joinBtnText: { color: "#FF6B4A", fontWeight: "600", fontSize: 12 },
   empty: { textAlign: "center", marginTop: 40, color: "#999" },
 });

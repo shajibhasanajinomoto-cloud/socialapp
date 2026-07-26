@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   card: { backgroundColor: "#fff", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 24 },
   title: { fontSize: 18, fontWeight: "700", textAlign: "center", marginBottom: 20 },
   buttonRow: { flexDirection: "row", justifyContent: "space-around" },
-  declineBtn: { backgroundColor: "#dc2626", paddingHorizontal: 30, paddingVertical: 14, borderRadius: 30 },
-  acceptBtn: { backgroundColor: "#16a34a", paddingHorizontal: 30, paddingVertical: 14, borderRadius: 30 },
+  declineBtn: { backgroundColor: "#E5484D", paddingHorizontal: 30, paddingVertical: 14, borderRadius: 30 },
+  acceptBtn: { backgroundColor: "#2FAF8A", paddingHorizontal: 30, paddingVertical: 14, borderRadius: 30 },
   btnText: { color: "#fff", fontWeight: "700", fontSize: 15 },
 });

@@ -23,6 +23,7 @@ import StoryViewerScreen from "../screens/StoryViewerScreen";
 import CallScreen from "../screens/CallScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import EditFamilyScreen from "../screens/EditFamilyScreen";
+import { colors } from "../theme";
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -54,7 +55,16 @@ function FeedHeaderRight({ navigation }) {
 
 function MainTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: true }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: { backgroundColor: colors.surface },
+        headerTitleStyle: { color: colors.textPrimary, fontWeight: "700" },
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
+      }}
+    >
       <Tab.Screen
         name="Feed"
         component={FeedScreen}
@@ -95,7 +105,13 @@ export default function AppNavigator() {
   return (
     <NavigationContainer ref={navigationRef}>
       {user ? (
-        <RootStack.Navigator>
+        <RootStack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: colors.surface },
+            headerTitleStyle: { color: colors.textPrimary, fontWeight: "700" },
+            headerTintColor: colors.accent,
+          }}
+        >
           <RootStack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
           <RootStack.Screen name="Chat" component={ChatScreen} options={{ title: "Chat" }} />
           <RootStack.Screen

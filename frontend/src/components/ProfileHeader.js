@@ -177,10 +177,10 @@ export default function ProfileHeader({
 }
 
 const styles = StyleSheet.create({
-  header: { alignItems: "center", backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#eee", paddingBottom: 20 },
+  header: { alignItems: "center", backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#F0E6DE", paddingBottom: 20 },
   coverWrapper: { width: "100%", height: 150, marginBottom: -45 },
-  cover: { width: "100%", height: 150, backgroundColor: "#dbeafe" },
-  coverPlaceholder: { width: "100%", height: 150, backgroundColor: "#dbeafe" },
+  cover: { width: "100%", height: 150, backgroundColor: "#EFE9F7" },
+  coverPlaceholder: { width: "100%", height: 150, backgroundColor: "#EFE9F7" },
   coverEditBadge: {
     position: "absolute",
     bottom: 8,
@@ -192,12 +192,12 @@ const styles = StyleSheet.create({
   },
   editBadgeText: { color: "#fff", fontSize: 11, fontWeight: "600" },
   avatarWrapper: { marginTop: 45 },
-  avatar: { width: 96, height: 96, borderRadius: 48, backgroundColor: "#eee", borderWidth: 3, borderColor: "#fff" },
+  avatar: { width: 96, height: 96, borderRadius: 48, backgroundColor: "#F0E6DE", borderWidth: 3, borderColor: "#fff" },
   avatarEditBadge: {
     position: "absolute",
     bottom: 0,
     right: 0,
-    backgroundColor: "#2563eb",
+    backgroundColor: "#FF6B4A",
     width: 28,
     height: 28,
     borderRadius: 14,
@@ -223,10 +223,10 @@ const styles = StyleSheet.create({
   detailIcon: { fontSize: 17, marginRight: 12, width: 20 },
   detailText: { fontSize: 15, fontWeight: "600", color: "#222" },
   detailSubText: { fontSize: 12, color: "#777", marginTop: 1 },
-  detailsAddText: { color: "#2563eb", fontWeight: "600", fontSize: 13 },
+  detailsAddText: { color: "#FF6B4A", fontWeight: "600", fontSize: 13 },
   familyList: { marginTop: 8, gap: 10 },
   familyItem: { flexDirection: "row", alignItems: "center" },
-  familyAvatar: { width: 32, height: 32, borderRadius: 16, marginRight: 8, backgroundColor: "#eee" },
+  familyAvatar: { width: 32, height: 32, borderRadius: 16, marginRight: 8, backgroundColor: "#F0E6DE" },
   familyName: { fontSize: 13, fontWeight: "600", color: "#222" },
   familyRelation: { fontSize: 11, color: "#777" },
 });

@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   rowOwn: { alignItems: "flex-end" },
   rowOther: { alignItems: "flex-start" },
   bubble: { maxWidth: "75%", borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10 },
-  bubbleOwn: { backgroundColor: "#2563eb", borderBottomRightRadius: 4 },
+  bubbleOwn: { backgroundColor: "#FF6B4A", borderBottomRightRadius: 4 },
   bubbleOther: { backgroundColor: "#e5e5ea", borderBottomLeftRadius: 4 },
   textOwn: { color: "#fff", fontSize: 15 },
   textOther: { color: "#000", fontSize: 15 },

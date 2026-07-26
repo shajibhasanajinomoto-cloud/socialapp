@@ -105,17 +105,17 @@ export default function GroupDetailScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
-  header: { backgroundColor: "#fff", padding: 20, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#eee" },
+  container: { flex: 1, backgroundColor: "#FBF6F2" },
+  header: { backgroundColor: "#fff", padding: 20, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#F0E6DE" },
   groupName: { fontSize: 20, fontWeight: "700" },
   groupMeta: { color: "#777", marginTop: 4, marginBottom: 12 },
-  joinBtn: { backgroundColor: "#2563eb", paddingHorizontal: 24, paddingVertical: 8, borderRadius: 8 },
+  joinBtn: { backgroundColor: "#FF6B4A", paddingHorizontal: 24, paddingVertical: 8, borderRadius: 8 },
   joinBtnText: { color: "#fff", fontWeight: "600" },
-  leaveBtn: { backgroundColor: "#fee2e2" },
-  leaveBtnText: { color: "#dc2626", fontWeight: "600" },
-  composer: { backgroundColor: "#fff", padding: 12, borderBottomWidth: 1, borderBottomColor: "#eee" },
+  leaveBtn: { backgroundColor: "#FDE7E7" },
+  leaveBtnText: { color: "#E5484D", fontWeight: "600" },
+  composer: { backgroundColor: "#fff", padding: 12, borderBottomWidth: 1, borderBottomColor: "#F0E6DE" },
   composerInput: { fontSize: 14, minHeight: 40 },
-  postBtn: { backgroundColor: "#2563eb", alignSelf: "flex-end", paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, marginTop: 8 },
+  postBtn: { backgroundColor: "#FF6B4A", alignSelf: "flex-end", paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, marginTop: 8 },
   postBtnText: { color: "#fff", fontWeight: "600" },
   empty: { textAlign: "center", marginTop: 40, color: "#999" },
 });
