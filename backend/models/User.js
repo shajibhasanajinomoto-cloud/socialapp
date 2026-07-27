@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
     relationshipSince: { type: Date, default: null },
+    pushToken: { type: String, default: "" },
     familyMembers: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

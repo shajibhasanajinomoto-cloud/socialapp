@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const Message = require("../models/Message");
 const Notification = require("../models/Notification");
+const User = require("../models/User");
+const { sendPushToUser } = require("../utils/pushNotifications");
 
 // userId -> socketId map for direct delivery
 const onlineUsers = new Map();
@@ -57,6 +59,13 @@ function socketHandler(io) {
           sender: socket.userId,
           type: "message",
         });
+
+        const sender = await User.findById(socket.userId).select("name");
+        sendPushToUser(receiverId, {
+          title: sender?.name || "New message",
+          body: mediaType === "text" ? content : mediaType === "image" ? "📷 Sent a photo" : "🎙️ Sent a voice note",
+          data: { type: "message", senderId: socket.userId },
+        });
       } catch (err) {
         socket.emit("message_error", { error: err.message });
       }
@@ -79,7 +88,7 @@ function socketHandler(io) {
     // ----- WebRTC call signaling (relayed only; no media passes through this server) -----
 
     // Caller initiates a call: sends SDP offer + call type (audio/video)
-    socket.on("call_user", ({ receiverId, offer, callType }) => {
+    socket.on("call_user", async ({ receiverId, offer, callType }) => {
       const receiverSocketId = onlineUsers.get(receiverId);
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("incoming_call", {
@@ -90,6 +99,16 @@ function socketHandler(io) {
       } else {
         socket.emit("call_failed", { reason: "User is offline" });
       }
+
+      // Always send a push notification too — the receiver's app may be
+      // backgrounded or fully closed, in which case the in-app incoming-call
+      // popup alone (which relies on the socket connection) won't be seen.
+      const caller = await User.findById(socket.userId).select("name");
+      sendPushToUser(receiverId, {
+        title: `Incoming ${callType === "video" ? "video" : "voice"} call`,
+        body: `${caller?.name || "Someone"} is calling you`,
+        data: { type: "call", callerId: socket.userId, callType },
+      });
     });
 
     // Callee accepts and sends back an SDP answer

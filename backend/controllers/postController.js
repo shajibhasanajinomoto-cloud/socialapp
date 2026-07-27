@@ -3,6 +3,8 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Notification = require("../models/Notification");
 const Group = require("../models/Group");
+const User = require("../models/User");
+const { sendPushToUser } = require("../utils/pushNotifications");
 const cloudinary = require("../config/cloudinary");
 
 const uploadBufferToCloudinary = (buffer) =>
@@ -153,6 +155,13 @@ exports.toggleReaction = async (req, res) => {
         type: "like",
         postId: post._id,
       });
+
+      const reactor = await User.findById(req.userId).select("name");
+      sendPushToUser(post.userId, {
+        title: "New reaction",
+        body: `${reactor?.name || "Someone"} reacted to your post`,
+        data: { type: "like", postId: post._id.toString() },
+      });
     }
 
     // Summarize counts per reaction type for easy frontend rendering
@@ -189,6 +198,13 @@ exports.addComment = async (req, res) => {
         sender: req.userId,
         type: "comment",
         postId: post._id,
+      });
+
+      const commenter = await User.findById(req.userId).select("name");
+      sendPushToUser(post.userId, {
+        title: "New comment",
+        body: `${commenter?.name || "Someone"} commented: ${content.slice(0, 60)}`,
+        data: { type: "comment", postId: post._id.toString() },
       });
     }
 

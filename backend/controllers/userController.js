@@ -131,3 +131,16 @@ exports.updateFamilyMembers = async (req, res) => {
     res.status(500).json({ message: "Failed to update family members", error: err.message });
   }
 };
+
+// PUT /api/users/me/push-token
+exports.updatePushToken = async (req, res) => {
+  try {
+    const { pushToken } = req.body;
+    if (!pushToken) return res.status(400).json({ message: "pushToken is required" });
+
+    await User.findByIdAndUpdate(req.userId, { pushToken });
+    res.status(200).json({ message: "Push token saved" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to save push token", error: err.message });
+  }
+};

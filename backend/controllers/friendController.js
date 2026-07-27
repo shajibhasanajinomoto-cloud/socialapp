@@ -1,6 +1,7 @@
 const Friendship = require("../models/Friendship");
 const Notification = require("../models/Notification");
 const User = require("../models/User");
+const { sendPushToUser } = require("../utils/pushNotifications");
 
 // POST /api/friends/request/:userId
 exports.sendRequest = async (req, res) => {
@@ -28,6 +29,13 @@ exports.sendRequest = async (req, res) => {
       type: "friend_request",
     });
 
+    const requester = await User.findById(req.userId).select("name");
+    sendPushToUser(recipientId, {
+      title: "New friend request",
+      body: `${requester?.name || "Someone"} sent you a friend request`,
+      data: { type: "friend_request" },
+    });
+
     res.status(201).json({ friendship });
   } catch (err) {
     res.status(500).json({ message: "Failed to send friend request", error: err.message });
@@ -51,6 +59,13 @@ exports.acceptRequest = async (req, res) => {
       recipient: friendship.requester,
       sender: req.userId,
       type: "friend_accept",
+    });
+
+    const accepter = await User.findById(req.userId).select("name");
+    sendPushToUser(friendship.requester, {
+      title: "Friend request accepted",
+      body: `${accepter?.name || "Someone"} accepted your friend request`,
+      data: { type: "friend_accept" },
     });
 
     res.status(200).json({ friendship });
