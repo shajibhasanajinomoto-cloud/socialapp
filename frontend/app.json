@@ -13,11 +13,12 @@
     },
     "android": {
       "package": "com.shajibhasan.socialapp",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#4C3575"
       },
-      "permissions": ["CAMERA", "RECORD_AUDIO", "MODIFY_AUDIO_SETTINGS"]
+      "permissions": ["CAMERA", "RECORD_AUDIO", "MODIFY_AUDIO_SETTINGS", "POST_NOTIFICATIONS"]
     },
     "ios": {
       "supportsTablet": true,
@@ -30,6 +31,20 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["@config-plugins/react-native-webrtc"]
+    "plugins": [
+      "@config-plugins/react-native-webrtc",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#4C3575"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d5781643-a972-48c7-931b-646b201c2fc6"
+      }
+    }
   }
 }

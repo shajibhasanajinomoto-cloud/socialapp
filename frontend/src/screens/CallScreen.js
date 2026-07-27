@@ -1,13 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, RTCView, mediaDevices } from "react-native-webrtc";
+import InCallManager from "react-native-incall-manager";
 import { useSocket } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
 
-// Free public STUN server for NAT traversal (works for most home/mobile networks;
-// for production reliability across restrictive NATs, a TURN server would also be needed)
+// STUN discovers your public IP for less-restrictive networks, but many mobile
+// data / carrier networks (CGNAT) block direct peer-to-peer connections entirely.
+// A TURN server relays the call through a middle server in those cases — without
+// one, calls "connect" (signaling succeeds) but no audio/video ever arrives.
+// These are free public TURN credentials (openrelay.metered.ca) suitable for
+// development/testing. For production, use a paid TURN provider for reliability.
 const ICE_SERVERS = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    {
+      urls: "turn:openrelay.metered.ca:80",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443?transport=tcp",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+  ],
 };
 
 export default function CallScreen({ route, navigation }) {
@@ -21,6 +43,7 @@ export default function CallScreen({ route, navigation }) {
   const [callStatus, setCallStatus] = useState(mode === "incoming" ? "Incoming call..." : "Calling...");
   const [muted, setMuted] = useState(false);
   const [videoOff, setVideoOff] = useState(false);
+  const [speakerOn, setSpeakerOn] = useState(true);
 
   const pcRef = useRef(null);
 
@@ -30,6 +53,12 @@ export default function CallScreen({ route, navigation }) {
   }, []);
 
   const setupCall = async () => {
+    // Activates the proper audio session for calling and forces speaker output
+    // (Android otherwise defaults to the earpiece, which is barely audible
+    // unless the phone is held right up to your ear).
+    InCallManager.start({ media: callType === "video" ? "video" : "audio" });
+    InCallManager.setForceSpeakerphoneOn(true);
+
     const stream = await mediaDevices.getUserMedia({
       audio: true,
       video: callType === "video" ? { facingMode: "user" } : false,
@@ -88,6 +117,7 @@ export default function CallScreen({ route, navigation }) {
   };
 
   const cleanup = () => {
+    InCallManager.stop();
     localStream?.getTracks().forEach((t) => t.stop());
     pcRef.current?.close();
     socket.off("call_answered");
@@ -109,6 +139,11 @@ export default function CallScreen({ route, navigation }) {
   const toggleVideo = () => {
     localStream?.getVideoTracks().forEach((t) => (t.enabled = videoOff));
     setVideoOff(!videoOff);
+  };
+
+  const toggleSpeaker = () => {
+    InCallManager.setForceSpeakerphoneOn(!speakerOn);
+    setSpeakerOn(!speakerOn);
   };
 
   return (
@@ -139,6 +174,10 @@ export default function CallScreen({ route, navigation }) {
       <View style={styles.controls}>
         <TouchableOpacity style={styles.controlBtn} onPress={toggleMute}>
           <Text style={styles.controlIcon}>{muted ? "🔇" : "🎤"}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.controlBtn} onPress={toggleSpeaker}>
+          <Text style={styles.controlIcon}>{speakerOn ? "🔊" : "🔈"}</Text>
         </TouchableOpacity>
 
         {callType === "video" && (
