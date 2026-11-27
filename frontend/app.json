@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "SocialApp",
+    "name": "Dearly",
     "slug": "socialapp",
+    "description": "Connect with the people you care about.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,35 +10,53 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FBF6F2"
+      "backgroundColor": "#0F7A4B"
     },
-    "android": {
-      "package": "com.shajibhasan.socialapp",
-      "googleServicesFile": "./google-services.json",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#4C3575"
-      },
-      "permissions": ["CAMERA", "RECORD_AUDIO", "MODIFY_AUDIO_SETTINGS", "POST_NOTIFICATIONS"]
-    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.socialapp",
       "infoPlist": {
-        "NSCameraUsageDescription": "Allow SocialApp to access your camera for video calls",
-        "NSMicrophoneUsageDescription": "Allow SocialApp to access your microphone for calls"
-      }
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera for video calls.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone for voice and video calls."
+      },
+      "bitcode": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F7A4B"
+      },
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS",
+        "ACCESS_NETWORK_STATE",
+        "INTERNET",
+        "SYSTEM_ALERT_WINDOW",
+        "WAKE_LOCK",
+        "BLUETOOTH"
+      ],
+      "package": "com.anonymous.socialapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "@config-plugins/react-native-webrtc",
       [
-        "expo-notifications",
+        "@config-plugins/react-native-webrtc",
         {
-          "icon": "./assets/icon.png",
-          "color": "#4C3575"
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera for video calls.",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice and video calls."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 24
+          }
         }
       ]
     ],

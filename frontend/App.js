@@ -57,7 +57,7 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <AppContent />
     </AuthProvider>
   );
