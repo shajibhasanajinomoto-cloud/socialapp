@@ -60,6 +60,16 @@ exports.getChatList = async (req, res) => {
         $group: {
           _id: "$conversationId",
           lastMessage: { $first: "$$ROOT" },
+          // Messages sent TO me in this conversation that I have not read yet
+          unreadCount: {
+            $sum: {
+              $cond: [
+                { $and: [{ $eq: ["$receiverId", userId] }, { $ne: ["$status", "read"] }] },
+                1,
+                0,
+              ],
+            },
+          },
         },
       },
       { $sort: { "lastMessage.timestamp": -1 } },

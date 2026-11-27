@@ -25,13 +25,7 @@ exports.updateAvatar = async (req, res) => {
       { new: true }
     );
 
-    // Auto-create a feed post announcing the profile picture change (Facebook-style)
-    await Post.create({
-      userId: req.userId,
-      content: `${user.name} updated their profile picture.`,
-      imageUrl: result.secure_url,
-      imagePublicId: result.public_id,
-    });
+    // Dearly: changing the profile photo no longer posts to a feed.
 
     res.status(200).json({ user });
   } catch (err) {

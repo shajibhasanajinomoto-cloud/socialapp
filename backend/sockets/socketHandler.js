@@ -29,6 +29,11 @@ function socketHandler(io) {
     // Notify others this user is online (optional, for presence indicators)
     socket.broadcast.emit("user_online", { userId: socket.userId });
 
+    // NEW: lets a client ask "is this person online right now?"
+    socket.on("check_online", ({ userId }, ack) => {
+      if (typeof ack === "function") ack(onlineUsers.has(String(userId)));
+    });
+
     socket.on("send_message", async ({ receiverId, content, mediaUrl, mediaType }) => {
       try {
         const conversationId = Message.buildConversationId(socket.userId, receiverId);
@@ -78,11 +83,27 @@ function socketHandler(io) {
       }
     });
 
+    // CHANGED: only the two people in a conversation may mark it read, and the
+    // sender is told so their messages can show the "read" tick.
     socket.on("mark_read", async ({ conversationId }) => {
-      await Message.updateMany(
-        { conversationId, receiverId: socket.userId, status: { $ne: "read" } },
-        { $set: { status: "read" } }
-      );
+      try {
+        if (typeof conversationId !== "string") return;
+        const ids = conversationId.split("_");
+        if (!ids.includes(String(socket.userId))) return;
+
+        await Message.updateMany(
+          { conversationId, receiverId: socket.userId, status: { $ne: "read" } },
+          { $set: { status: "read" } }
+        );
+
+        const otherId = ids.find((id) => id !== String(socket.userId));
+        const otherSocketId = otherId && onlineUsers.get(otherId);
+        if (otherSocketId) {
+          io.to(otherSocketId).emit("messages_read", { conversationId });
+        }
+      } catch (err) {
+        console.error("mark_read error:", err.message);
+      }
     });
 
     // ----- WebRTC call signaling (relayed only; no media passes through this server) -----
@@ -100,7 +121,7 @@ function socketHandler(io) {
         socket.emit("call_failed", { reason: "User is offline" });
       }
 
-      // Always send a push notification too — the receiver's app may be
+      // Always send a push notification too - the receiver's app may be
       // backgrounded or fully closed, in which case the in-app incoming-call
       // popup alone (which relies on the socket connection) won't be seen.
       const caller = await User.findById(socket.userId).select("name");
