@@ -1,41 +1,40 @@
-// Design tokens — "Warm Dusk" identity.
-// A deliberate departure from generic social-app blue: a plum/coral palette
-// that feels warm and human rather than corporate. Use these tokens instead
-// of hardcoded hex values so the whole app stays visually consistent.
+// Design tokens - "Dearly" green identity.
+// Key names are unchanged from the old theme, so every screen that uses
+// these tokens is re-coloured automatically.
 
 export const colors = {
   // Brand
-  primary: "#4C3575", // Ink Plum — headers, nav, primary emphasis
-  primaryDark: "#332452", // pressed/darker state
-  primarySoft: "#EFE9F7", // light plum tint for subtle backgrounds/badges
+  primary: "#0F7A4B", // Deep green - headers, nav, primary emphasis
+  primaryDark: "#0A5C37", // pressed / darker state
+  primarySoft: "#DDF3E6", // mint tint for subtle backgrounds / badges
 
-  accent: "#FF6B4A", // Ember Coral — CTAs, active states, likes, links
-  accentDark: "#E85A3C",
-  accentSoft: "#FFE7E0", // light coral tint
+  accent: "#1FA971", // Fresh green - buttons, active states, links
+  accentDark: "#148A5B",
+  accentSoft: "#DDF3E6", // mint tint
 
-  marigold: "#FFB648", // secondary accent — pairs with coral in gradients
+  marigold: "#8FE0B5", // light green - pairs with accent in gradients
 
   // Surfaces
-  background: "#FBF6F2", // warm linen app background (not cold gray)
+  background: "#F6FBF8",
   surface: "#FFFFFF",
-  border: "#F0E6DE",
+  border: "#E3EEE7",
 
   // Text
-  textPrimary: "#2A2035",
-  textSecondary: "#8B7F97",
-  textMuted: "#B7AEC2",
+  textPrimary: "#14261D",
+  textSecondary: "#6B7A72",
+  textMuted: "#A9B8B0",
   textOnPrimary: "#FFFFFF",
 
   // Status
-  success: "#2FAF8A",
-  danger: "#E5484D",
-  dangerSoft: "#FDE7E7",
-  warning: "#FFB648",
+  success: "#2ECC71",
+  danger: "#D64545",
+  dangerSoft: "#FBE9E9",
+  warning: "#F2B84B",
 };
 
 export const gradients = {
-  story: ["#FF6B4A", "#FFB648"], // coral -> marigold, used for story rings
-  header: ["#4C3575", "#6B4A9E"], // plum gradient for headers/splash
+  story: ["#1FA971", "#8FE0B5"],
+  header: ["#0F7A4B", "#1FA971"],
 };
 
 export const radius = {
@@ -55,8 +54,8 @@ export const spacing = {
 
 export const shadow = {
   card: {
-    shadowColor: "#2A2035",
-    shadowOpacity: 0.06,
+    shadowColor: "#0F7A4B",
+    shadowOpacity: 0.08,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
