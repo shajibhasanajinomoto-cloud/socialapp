@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import { colors, gradients, radius } from "../theme";
 
@@ -30,10 +31,11 @@ export default function SignupScreen({ navigation }) {
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <LinearGradient colors={gradients.header} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoLetter}>S</Text>
+          <View style={styles.logoTile}>
+            <Ionicons name="chatbubble-outline" size={44} color={colors.primary} />
+            <Ionicons name="heart-outline" size={18} color={colors.primary} style={styles.logoHeart} />
           </View>
-          <Text style={styles.heroTitle}>Join SocialApp</Text>
+          <Text style={styles.heroTitle}>Join Dearly</Text>
           <Text style={styles.heroSubtitle}>Create your account in a minute</Text>
         </LinearGradient>
 
@@ -68,7 +70,9 @@ export default function SignupScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.link}>Already have an account? <Text style={styles.linkBold}>Log in</Text></Text>
+            <Text style={styles.link}>
+              Already have an account? <Text style={styles.linkBold}>Log in</Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -86,19 +90,17 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 36,
     borderBottomRightRadius: 36,
   },
-  logoCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: "rgba(255,255,255,0.18)",
+  logoTile: {
+    width: 76,
+    height: 76,
+    borderRadius: 22,
+    backgroundColor: colors.primarySoft,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 14,
-    borderWidth: 1.5,
-    borderColor: "rgba(255,255,255,0.35)",
   },
-  logoLetter: { fontSize: 34, fontWeight: "800", color: "#fff" },
-  heroTitle: { fontSize: 24, fontWeight: "800", color: "#fff", letterSpacing: 0.3 },
+  logoHeart: { position: "absolute", top: 26 },
+  heroTitle: { fontSize: 26, fontWeight: "800", color: "#fff", letterSpacing: 0.3 },
   heroSubtitle: { fontSize: 14, color: "rgba(255,255,255,0.85)", marginTop: 4, textAlign: "center", paddingHorizontal: 20 },
   form: { flex: 1, paddingHorizontal: 28, paddingTop: 36 },
   input: {

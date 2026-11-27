@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import { colors, gradients, radius } from "../theme";
 
@@ -29,11 +30,13 @@ export default function LoginScreen({ navigation }) {
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <LinearGradient colors={gradients.header} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoLetter}>S</Text>
+          {/* Dearly logo: heart inside a speech bubble, on a mint tile */}
+          <View style={styles.logoTile}>
+            <Ionicons name="chatbubble-outline" size={50} color={colors.primary} />
+            <Ionicons name="heart-outline" size={20} color={colors.primary} style={styles.logoHeart} />
           </View>
-          <Text style={styles.heroTitle}>SocialApp</Text>
-          <Text style={styles.heroSubtitle}>Where your people are</Text>
+          <Text style={styles.heroTitle}>Dearly</Text>
+          <Text style={styles.heroSubtitle}>Connect with the people you care about.</Text>
         </LinearGradient>
 
         <View style={styles.form}>
@@ -62,7 +65,9 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-            <Text style={styles.link}>Don't have an account? <Text style={styles.linkBold}>Sign up</Text></Text>
+            <Text style={styles.link}>
+              Don't have an account? <Text style={styles.linkBold}>Sign up</Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -80,20 +85,18 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 36,
     borderBottomRightRadius: 36,
   },
-  logoCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: "rgba(255,255,255,0.18)",
+  logoTile: {
+    width: 84,
+    height: 84,
+    borderRadius: 24,
+    backgroundColor: colors.primarySoft,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 14,
-    borderWidth: 1.5,
-    borderColor: "rgba(255,255,255,0.35)",
+    marginBottom: 16,
   },
-  logoLetter: { fontSize: 34, fontWeight: "800", color: "#fff" },
-  heroTitle: { fontSize: 26, fontWeight: "800", color: "#fff", letterSpacing: 0.3 },
-  heroSubtitle: { fontSize: 14, color: "rgba(255,255,255,0.85)", marginTop: 4 },
+  logoHeart: { position: "absolute", top: 29 },
+  heroTitle: { fontSize: 30, fontWeight: "800", color: "#fff", letterSpacing: 0.3 },
+  heroSubtitle: { fontSize: 14, color: "rgba(255,255,255,0.85)", marginTop: 6, textAlign: "center", paddingHorizontal: 30 },
   form: { flex: 1, paddingHorizontal: 28, paddingTop: 36 },
   formTitle: { fontSize: 22, fontWeight: "700", color: colors.textPrimary, marginBottom: 24 },
   input: {

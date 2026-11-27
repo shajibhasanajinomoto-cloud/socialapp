@@ -4,6 +4,10 @@ import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, RTCView, med
 import InCallManager from "react-native-incall-manager";
 import { useSocket } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
+import { colors } from "../theme";
+
+// Set to true only when you need to debug call connection problems.
+const SHOW_DEBUG = false;
 
 // iceTransportPolicy: "relay" forces ALL call traffic through a TURN relay
 // server instead of attempting a direct connection first. This trades a
@@ -67,9 +71,17 @@ export default function CallScreen({ route, navigation }) {
         Alert.alert("Connection issue", "Not connected to server. Check your internet and try again.");
       }
 
-      InCallManager.start({ media: callType === "video" ? "video" : "audio" });
+      InCallManager.start({ media: callType === "video" ? "video" : "audio", auto: true });
       InCallManager.setForceSpeakerphoneOn(true);
-      log("InCallManager started (speaker forced ON)");
+      log("InCallManager started (auto mode, speaker forced ON)");
+
+      // Some Android devices ignore the speaker request made before the audio
+      // session is fully live; re-asserting it a moment later is a commonly
+      // needed workaround for calls that connect but stay silent.
+      setTimeout(() => {
+        InCallManager.setForceSpeakerphoneOn(true);
+        log("Re-asserted speaker ON (delayed)");
+      }, 1500);
 
       log("Requesting camera/mic...");
       const stream = await mediaDevices.getUserMedia({
@@ -89,7 +101,8 @@ export default function CallScreen({ route, navigation }) {
       log("Local tracks added to connection");
 
       pc.ontrack = (event) => {
-        log(">>> REMOTE TRACK ARRIVED: " + event.track.kind);
+        const t = event.track;
+        log(">>> REMOTE " + t.kind + " arrived | enabled:" + t.enabled + " muted:" + t.muted + " readyState:" + t.readyState);
         setRemoteStream(event.streams[0]);
         setCallStatus("Connected");
       };
@@ -112,7 +125,7 @@ export default function CallScreen({ route, navigation }) {
           setCallStatus("Connection failed");
           Alert.alert(
             "Call failed",
-            "Could not connect even through the relay server. This points to a signaling problem rather than a network issue. Please screenshot this debug log and send it back."
+            "Could not connect the call. Please check your internet and try again."
           );
         }
         if (state === "disconnected") setCallStatus("Reconnecting...");
@@ -251,11 +264,13 @@ export default function CallScreen({ route, navigation }) {
         </View>
       )}
 
-      <View style={styles.debugPanel}>
-        {debugLog.map((line, i) => (
-          <Text key={i} style={styles.debugText} numberOfLines={1}>{line}</Text>
-        ))}
-      </View>
+      {SHOW_DEBUG && (
+        <View style={styles.debugPanel}>
+          {debugLog.map((line, i) => (
+            <Text key={i} style={styles.debugText} numberOfLines={1}>{line}</Text>
+          ))}
+        </View>
+      )}
 
       <View style={styles.controls}>
         <TouchableOpacity style={styles.controlBtn} onPress={toggleMute}>
@@ -287,7 +302,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "#4C3575",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
